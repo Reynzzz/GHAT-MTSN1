@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 const {hash} = require('../helper/bcrypt')
-
+const bcryptjs = require("bcryptjs");
 module.exports = (sequelize, DataTypes) => {
   class Guru extends Model {
     /**
@@ -17,10 +17,8 @@ module.exports = (sequelize, DataTypes) => {
       Guru.belongsToMany(models.kelas, { through: models.guruKelas, foreignKey: 'guruId', as: 'Kelases' });
     }
 
-    // Instance method to get decrypted password
-    getDecryptedPassword() {
-      return decryptPassword(this.password);
-    }
+
+    
   }
   
   Guru.init({
@@ -38,13 +36,35 @@ module.exports = (sequelize, DataTypes) => {
     type :DataTypes.STRING,
     jadwalGuruJagaFrom : DataTypes.DATE,
     jadwalGuruJagaTo : DataTypes.DATE
-  }, {
+  },
+  {
+    hooks: {
+        beforeCreate(instance, option) {          
+            if (instance.password) {
+                let salt = bcryptjs.genSaltSync(10);
+                let hash = bcryptjs.hashSync(instance.password, salt);
+                instance.password = hash;
+            }
+        },
+        beforeUpdate(instance, option) {
+            if (instance.changed('password')) {
+                let salt = bcryptjs.genSaltSync(10);
+                let hash = bcryptjs.hashSync(instance.password, salt);
+                instance.password = hash;
+            }
+        }
+    },
     sequelize,
-    modelName: 'Guru',
-  
-  });
-  Guru.beforeCreate(guru => {
-    guru.password = hash(guru.password)
-  })
+    modelName: "Guru",
+    defaultScope: {
+        attributes: { exclude: ['password'] }
+    },
+    scopes: {
+        withPassword: {
+            attributes: {}
+        }
+    }
+}
+  )
   return Guru;
 };

@@ -2,7 +2,7 @@
 const {
   Model
 } = require('sequelize');
-
+const bcryptjs = require("bcryptjs");
 const {hash} = require('../helper/bcrypt')
 module.exports = (sequelize, DataTypes) => {
   class kelas extends Model {
@@ -23,12 +23,34 @@ module.exports = (sequelize, DataTypes) => {
   kelas.init({
     name: DataTypes.STRING,
     password : DataTypes.STRING
-  }, {
+  },{
+    hooks: {
+        beforeCreate(instance, option) {          
+            if (instance.password) {
+                let salt = bcryptjs.genSaltSync(10);
+                let hash = bcryptjs.hashSync(instance.password, salt);
+                instance.password = hash;
+            }
+        },
+        beforeUpdate(instance, option) {
+            if (instance.changed('password')) {
+                let salt = bcryptjs.genSaltSync(10);
+                let hash = bcryptjs.hashSync(instance.password, salt);
+                instance.password = hash;
+            }
+        }
+    },
     sequelize,
-    modelName: 'kelas',
-  });
-  kelas.beforeCreate(kelas => {
-    kelas.password = hash(kelas.password)
-  })
+    modelName: "kelas",
+    defaultScope: {
+        attributes: { exclude: ['password'] }
+    },
+    scopes: {
+        withPassword: {
+            attributes: {}
+        }
+    }
+}
+  )
   return kelas;
 };

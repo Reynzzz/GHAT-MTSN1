@@ -86,58 +86,58 @@ class Controller {
     }
     static async updateGuru(req, res) {
         try {
-            const { username, Golongan, umur, jenisKelamin, password, jadwalGuruJagaFrom, jadwalGuruJagaTo } = req.body;
-            const { id } = req.params;
-            
-            console.log(id);
-            const data = await Guru.findByPk(id);
-            
-            if (!data) {
-                throw {
-                    name: 'Guru not found'
-                };
-            }
-
-            // Dapatkan waktu saat ini
-            const now = new Date();
-            
-            // Ubah jadwalGuruJagaFrom dan jadwalGuruJagaTo menjadi objek Date
-            const jadwalGuruJagaFromDate = new Date(jadwalGuruJagaFrom);
-            const jadwalGuruJagaToDate = new Date(jadwalGuruJagaTo);
-
-            // Tentukan tipe baru berdasarkan waktu saat ini
-            let newType = 'Pengajar';
-            if (now >= jadwalGuruJagaFromDate && now <= jadwalGuruJagaToDate) {
-                newType = 'Pengajar Dan Guru Jaga';
-            }
-
-            // Perbarui data guru
-            await Guru.update({
-                username,
-                Golongan,
-                umur,
-                jenisKelamin,
-                password,
-                type: newType, // Atur tipe yang diperbarui
-                jadwalGuruJagaFrom,
-                jadwalGuruJagaTo
-            }, {
-                where: {
-                    id
-                }
-            });
-
-            res.status(200).json({
-                msg: 'Update berhasil'
-            });
+          const { username, Golongan, umur, jenisKelamin, password, jadwalGuruJagaFrom, jadwalGuruJagaTo } = req.body;
+          const { id } = req.params;
+      
+          console.log(id);
+          const guru = await Guru.findByPk(id);
+      
+          if (!guru) {
+            throw {
+              name: 'Guru not found'
+            };
+          }
+      
+          // Dapatkan waktu saat ini
+          const now = new Date();
+      
+          // Ubah jadwalGuruJagaFrom dan jadwalGuruJagaTo menjadi objek Date
+          const jadwalGuruJagaFromDate = new Date(jadwalGuruJagaFrom);
+          const jadwalGuruJagaToDate = new Date(jadwalGuruJagaTo);
+      
+          // Tentukan tipe baru berdasarkan waktu saat ini
+          let newType = 'Pengajar';
+          if (now >= jadwalGuruJagaFromDate && now <= jadwalGuruJagaToDate) {
+            newType = 'Pengajar Dan Guru Jaga';
+          }
+      
+          // Perbarui field pada instance
+          guru.username = username || guru.username;
+          guru.Golongan = Golongan || guru.Golongan;
+          guru.umur = umur || guru.umur;
+          guru.jenisKelamin = jenisKelamin || guru.jenisKelamin;
+          guru.jadwalGuruJagaFrom = jadwalGuruJagaFrom || guru.jadwalGuruJagaFrom;
+          guru.jadwalGuruJagaTo = jadwalGuruJagaTo || guru.jadwalGuruJagaTo;
+          guru.type = newType;
+          guru.password = password || guru.password
+          // Jika password disediakan, hash dan perbarui
+         
+      
+          // Simpan perubahan
+          await guru.save();
+      
+          res.status(200).json({
+            msg: 'Update berhasil'
+          });
         } catch (error) {
-            console.log(error);
-            res.status(500).json({
-                msg: 'Terjadi kesalahan',
-                error: error.message
-            });
+          console.log(error);
+          res.status(500).json({
+            msg: 'Terjadi kesalahan',
+            error: error.message
+          });
         }
-    }
+      }
+      
 }
 const updateGuruTypes = async () => {
     try {

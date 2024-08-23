@@ -14,11 +14,9 @@ class Controller {
   static async Login(req, res) {
     try {
       const { username, password } = req.body;
-      const user = await Guru.findOne({
-        where: {
-          username,
-        },
-      });
+      console.log(req.body);
+      
+      const user = await await Guru.scope('withPassword').findOne({ where: { username } });
       if (!user) {
         throw {
           name: "invalid login",

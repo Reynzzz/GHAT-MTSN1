@@ -74,7 +74,7 @@ class Controller {
     static async updateKelas(req,res) {
         try {
             
-            const {name} = req.body
+            const {name,password} = req.body
             const {id} = req.params
             const data = await kelas.findOne({
                 where : {
@@ -86,14 +86,9 @@ class Controller {
                     name : 'kelas not found'
                 }
             }
-            await kelas.update({
-                    name,
-                  
-            },{
-                where : {
-                    id
-                }
-            })
+           kelas.name = name || kelas.name;
+           kelas.password = password || kelas.password
+           await kelas.save()
             res.status(200).json({
                 msg : 'updated successfuly'
             })

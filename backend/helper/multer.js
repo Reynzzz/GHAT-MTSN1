@@ -38,10 +38,10 @@ const compressImage = async (req, res, next) => {
     const compressedPath = `uploads/compressed-${filename}`;
 
     await sharp(tempPath)
-      .resize({ width: 800 }) 
+      .resize({ width: 800 }) // Resize the image to a width of 800px
       .toFile(compressedPath);
 
-    // Ensure temp file deletion is logged and handled properly
+    // Delete the original uploaded file
     try {
       fs.unlinkSync(tempPath);
       console.log(`Deleted temporary file: ${tempPath}`);
@@ -49,13 +49,14 @@ const compressImage = async (req, res, next) => {
       console.error(`Error deleting file: ${unlinkError.message}`);
     }
 
+    // Update req.file to point to the compressed file
     req.file.path = compressedPath;
     req.file.filename = `compressed-${filename}`;
 
     next();
   } catch (error) {
     console.error(`Error during image compression: ${error.message}`);
-    next(error); // Propagate the error to Express error handling middleware
+    next(error);
   }
 };
 

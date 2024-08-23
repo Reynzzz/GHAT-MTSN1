@@ -35,7 +35,6 @@ router.get("/schedule", ControllerAbsen.getAbsensiSchedule);
 router.put(
   "/absen/:id",
   upload.single("foto_absen"),
-  compressImage,
   errorMulter,
   ControllerAbsen.updateFotoAbsen
 );
