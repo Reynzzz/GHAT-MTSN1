@@ -1,5 +1,5 @@
 
-const {kelas,kelasAbsen,Absensi,Guru,dataKelas} = require('../models/index')
+const {kelas,Absensi,Guru,dataKelas} = require('../models/index')
 const { compare } = require("../helper/bcrypt");
 const { sign } = require("../helper/jwt");
 class Controller {
@@ -50,27 +50,27 @@ class Controller {
             console.log(error);
         }
     }
-    static async getKelasById(req,res) {
-        try {
-            const data = await kelas.findOne({
-                where : {
-                    id : req.params.id
-                },
-                include: [{
-                    model: kelasAbsen,
-                    as: 'kelasAbsens' 
-                  }]
-            })
-            if(!data) {
-                throw {
-                    name : 'kelas not found'
-                }
-            }
-            res.status(200).json(data)
-         } catch (error) {
-            console.log(error);
-        }
-    }
+     static async getKelasById(req,res) {
+      try {
+          const data = await kelas.findOne({
+              where : {
+                  id : req.params.id
+              },
+              include: [{
+                  model: dataKelas,
+                  as: 'DataKelas' 
+                }]
+          })
+          if(!data) {
+              throw {
+                  name : 'kelas not found'
+              }
+          }
+          res.status(200).json(data)
+       } catch (error) {
+          console.log(error);
+      }
+  }
     static async updateKelas(req,res) {
       try {
           const {name,password} = req.body
