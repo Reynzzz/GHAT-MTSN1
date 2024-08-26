@@ -72,39 +72,38 @@ class Controller {
         }
     }
     static async updateKelas(req,res) {
-        try {
-            
-            const {name,password} = req.body
-            const {id} = req.params
-            const data = await kelas.findOne({
-                where : {
-                    id : req.params.id
-                }
-            })
-            if (!data) {
-                throw {
-                    name : 'kelas not found'
-                }
-            }
-           kelas.name = name || kelas.name;
-           kelas.password = password || kelas.password
-           await kelas.save()
-            res.status(200).json({
-                msg : 'updated successfuly'
-            })
-        } catch (error) {
-            console.log(error);
-        }
-    }
+      try {
+          const {name,password} = req.body
+          const {id} = req.params
+          
+          const data = await kelas.findOne({
+              where : {
+                  id : req.params.id
+              }
+          })
+          
+          if (!data) {
+              throw {
+                  name : 'kelas not found'
+              }
+          }
+         data.name = name || data.name;
+         data.password = password || data.password
+         await data.save()
+          res.status(200).json({
+              msg : 'updated successfuly'
+          })
+      } catch (error) {
+          console.log(error,'ni error');
+      }
+  }
     static async HandleLoginKelas(req, res) {
         try {
           const { name, password } = req.body;
-          console.log(name);
-          const user = await kelas.findOne({
-            where: {
-              name,
-            },
-          });
+          console.log(req.body);
+          const user = await kelas.scope('withPassword').findOne({ where: { name } });
+          console.log(user);
+          
           if (!user) {
             throw {
               name: "invalid login",

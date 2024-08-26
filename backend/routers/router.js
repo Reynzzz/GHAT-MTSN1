@@ -17,7 +17,7 @@ router.get("/kelas", ControllerKelas.getKelas);
 router.get("/kelas/:id", ControllerKelas.getKelasById);
 router.post("/kelas", ControllerKelas.postKelas);
 router.post('/kelasLogin',ControllerKelas.HandleLoginKelas)
-router.put("/kelas/:id", ControllerKelas.updateKelas);
+router.put('/kelas/:id', ControllerKelas.updateKelas);
 router.delete("/kelas/:id", ControllerKelas.deletedKelas);
 router.get('/kelasSchedule',authenticationKelas,ControllerKelas.getAbsensiScheduleKelas)
 router.post('/dataKelas',authenticationKelas,ControllerKelas.postDataKelas)

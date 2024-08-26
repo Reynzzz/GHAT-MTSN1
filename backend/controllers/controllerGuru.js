@@ -110,7 +110,8 @@ class Controller {
           if (now >= jadwalGuruJagaFromDate && now <= jadwalGuruJagaToDate) {
             newType = 'Pengajar Dan Guru Jaga';
           }
-      
+          console.log(newType);
+          
           // Perbarui field pada instance
           guru.username = username || guru.username;
           guru.Golongan = Golongan || guru.Golongan;
@@ -156,7 +157,10 @@ const updateGuruTypes = async () => {
             if (guru.type !== newType) {
                 await Guru.update({ type: newType }, { where: { id: guru.id } });
             }
+            // console.log(newType , '<<');
         }
+        
+        
         console.log('Guru types updated successfully.');
     } catch (error) {
         console.error('Error updating guru types:', error);

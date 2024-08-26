@@ -16,12 +16,14 @@ module.exports = (sequelize, DataTypes) => {
       kelas.hasMany(models.Absensi, { foreignKey: 'kelasId', as: 'Absensis' });
       kelas.hasMany(models.dataKelas, { foreignKey: 'kelasId', as: 'DataKelas' }); 
     }
-    getDecryptedPassword() {
-      return decryptPassword(this.password);
-    }
   }
   kelas.init({
-    name: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      unique : {
+        args : true , msg : 'name already in use'
+      },
+    },
     password : DataTypes.STRING
   },{
     hooks: {
