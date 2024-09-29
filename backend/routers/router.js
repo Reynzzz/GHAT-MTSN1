@@ -30,7 +30,7 @@ router.delete('/scheduleAdmin/:id',ControllerAbsen.deleteFotoAbsen)
 router.put("/validasiGuruJaga/:id", ControllerAbsen.validasiGuruJaga);
 router.put("/validasiKelas/:id", ControllerAbsen.validasiKelas);
 router.use(authentication);
-router.post("/absen", ControllerAbsen.guruAbsen);
+router.post("/absen",upload.single("foto_absen"),errorMulter, ControllerAbsen.guruAbsen);
 router.get("/schedule", ControllerAbsen.getAbsensiSchedule);
 router.put(
   "/absen/:id",

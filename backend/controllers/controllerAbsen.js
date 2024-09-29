@@ -56,9 +56,16 @@ class Controller {
   }
   static async guruAbsen(req, res) {
     try {
-      const { guruId, kelasId, jadwalKelas } = req.body;
+      const guruId = req.user.id; 
+      const { kelasId, jadwalKelas,keterangan,materiAjar } = req.body;
+      const foto_absen = req.file.path;
+      console.log(req.user.id);
+      console.log(req.body);
+      console.log(foto_absen,'absen');
+      const statusAbsen = true
+      const tanggalAbsen = new Date();
       // console.log(req.body, "ni log");
-      const absensi = await Absensi.create({ guruId, kelasId, jadwalKelas });
+      const absensi = await Absensi.create({ guruId, kelasId, statusAbsen,jadwalKelas,keterangan,materiAjar,foto_absen,tanggalAbsen });
       // console.log(absensi);
       res.status(201).json(absensi);
     } catch (error) {
@@ -77,6 +84,7 @@ class Controller {
       const { guruId, kelasId, jadwalKelas } = req.body;
 
       const absensi = await Absensi.findByPk(id);
+      
       if (!absensi) {
         return res.status(404).json({ error: "Absensi not found" });
       }
