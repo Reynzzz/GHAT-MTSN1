@@ -164,6 +164,24 @@ class Controller {
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
+  static async deleteAllFotoAbsen(req, res) {
+    try {
+        const absensiList = await Absensi.findAll();
+
+        if (absensiList.length === 0) {
+            return res.status(404).json({ error: "No absensi records found" });
+        }
+
+        await Absensi.destroy({ where: {} });
+
+        res.status(200).json({ message: "All absensi records deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting absensi:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+
   static async getAbsensiSchedule(req, res) {
     try {
       // console.log(req.user);
@@ -259,12 +277,16 @@ class Controller {
   static async validasiKelas(req, res) {
     try {
       const { id } = req.params;
+      // console.log(req.body);
+      const {deskripsiKelas} = req.body
+      
       const absensi = await Absensi.findByPk(id);
 
       if (!absensi) {
         return res.status(404).json({ error: "Absensi record not found" });
       }
       absensi.statusKelas = true;
+      absensi.deskripsiKelas = deskripsiKelas
       await absensi.save();
 
       res.status(200).json({

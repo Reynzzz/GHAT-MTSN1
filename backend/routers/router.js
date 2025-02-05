@@ -12,6 +12,7 @@ router.get("/Guru", ControllerGuru.getGuru);
 router.post("/Guru", ControllerGuru.postGuru);
 router.put("/Guru/:id", ControllerGuru.updateGuru);
 router.delete("/Guru/:id", ControllerGuru.deletedGuru);
+router.delete('/guruAll',ControllerGuru.deleteAllGurus)
 
 router.get("/kelas", ControllerKelas.getKelas);
 router.get("/kelas/:id", ControllerKelas.getKelasById);
@@ -27,6 +28,7 @@ router.get('/dataKelas',authenticationKelas,ControllerKelas.getDataKelas)
 router.post("/login", ControllerAbsen.Login);
 router.get('/scheduleAdmin',ControllerAbsen.getAbsensiAdmin)
 router.delete('/scheduleAdmin/:id',ControllerAbsen.deleteFotoAbsen)
+router.delete('/scheduleAll',ControllerAbsen.deleteAllFotoAbsen)
 router.put("/validasiGuruJaga/:id", ControllerAbsen.validasiGuruJaga);
 router.put("/validasiKelas/:id", ControllerAbsen.validasiKelas);
 router.use(authentication);

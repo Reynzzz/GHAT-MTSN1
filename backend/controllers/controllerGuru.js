@@ -67,6 +67,28 @@ class Controller {
             console.log(error);
         }
     }
+    static async deleteAllGurus(req, res) {
+        try {
+            // Menghapus semua guru kecuali yang memiliki username 'admin'
+            const deletedCount = await Guru.destroy({
+                where: {
+                    username: { [Sequelize.Op.ne]: 'admin' } // Menggunakan operator not equal
+                }
+            });
+    
+            res.status(200).json({
+                msg: 'All non-admin gurus deleted successfully',
+                deletedCount
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                msg: 'Internal server error',
+                error: error.message
+            });
+        }
+    }
+    
     static async getGuruById(req,res) {
         try {
             const data = await Guru.findOne({
